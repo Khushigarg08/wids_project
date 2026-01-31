@@ -1,26 +1,72 @@
-# WiDS 2026: Age Guesstimator Project
+# *WiDS 2026: Age Guesstimator & Digit Classifier*
 
-## Overview
-This repository contains the midterm submission for the Women in Data Science (WiDS) Age Guesstimator project. The project focuses on computer vision and deep learning, specifically handwritten digit classification and real-time age and gender detection.
+## *Overview*
 
-## Project Structure
-- `mnist_scratch.py`: A Neural Network built from scratch using NumPy to classify digits (0-9).
-- `age_gender_detector.py`: A script using OpenCV's DNN module and pre-trained Caffe models to predict age and gender from images.
-- `/models`: Folder containing `.prototxt` and `.caffemodel` files.
-- `weights_W1.npy` / `weights_b1.npy`: Saved parameters from the MNIST training.
+This repository contains the end-to-end implementation of the **Age Guesstimator** project for the Women in Data Science (WiDS) 2026 program. The project is a comprehensive study of Computer Vision and Deep Learning, bridging the gap between theoretical mathematics and practical software implementation.
 
-## Concepts Learnt
-### 1. Mathematics of Neural Networks
-Implemented forward and backward propagation manually.
-- **Activation Functions**: Used ReLU for hidden layers and Softmax for the output layer.
-- **Gradient Descent**: Updated weights and biases using the formula: $W = W - \alpha \cdot dW$.
+## *Key Features*
 
-### 2. Computer Vision with OpenCV
-Utilized the DNN module to process images into "blobs" for model inference.
-- **Face Detection**: Employed a Single Shot Multibox Detector (SSD) with ResNet.
-- **Preprocessing**: Used `blobFromImage` for mean subtraction and scaling.
+**MNIST Digit Classification**: A 3-layer neural network built entirely from scratch using **NumPy** to demystify backpropagation and gradient descent.
 
-## How to Run
-1. Install dependencies: `pip install numpy opencv-python get-mnist`
-2. Run digit classification: `python mnist_scratch.py`
-3. Run age detection: `python age_gender_detector.py`
+**Real-Time Inference**: Optimized webcam pipeline achieving live demographic prediction (Age and Gender) using OpenCV's DNN module.
+
+
+**Manual Math Implementation**: Hand-coded forward/backward propagation, activation functions, and weight optimization.
+
+## **Concepts Learnt**
+### **1. Mathematics of Neural Networks**
+
+**Forward Propagation**: Passed input data through weights and biases to produce predictions ().
+
+**Activation Functions**: 
+**ReLU**: , used in hidden layers to solve the vanishing gradient problem.
+
+**Softmax**: Used in the final layer to provide probabilistic outputs for digit classification.
+
+**Backpropagation & Optimization**: Implemented the learning loop to calculate gradients and update weights using **Gradient Descent** with an optimized learning rate () of 0.1.
+
+### **2. Computer Vision with OpenCV**
+ 
+**SSD Face Detection**: Leveraged a Single Shot Multibox Detector (SSD) for efficient, single-pass face localization.
+
+
+**Image Blobs**: Utilized `cv2.dnn.blobFromImage` for:
+
+**Spatial Resizing**: Scaling images to  for consistency.
+ 
+**Mean Subtraction**: Subtracting RGB values (78.42, 87.76, 114.89) to handle illumination variations.
+
+**Channel Swapping**: Adjusting color order from BGR to RGB.
+
+
+## **Project Structure**
+
+wids_project/
+├── models/                  # Directory containing pre-trained Caffe models
+│   ├── age_deploy.prototxt
+│   ├── age_net.caffemodel
+│   ├── deploy.prototxt
+│   ├── gender_deploy.prototxt
+│   ├── gender_net.caffemodel
+│   └── res10_300x300_ssd_iter_140000_fp16.caffemodel
+├── age_gender_detector.py   
+├── mnist_scratch.py 
+├── readme.md                
+## **How to Run**
+
+### **Prerequisites**
+
+Ensure you have Python installed and your Environment Variables (PATH) configured. Install the required libraries:
+
+```bash
+pip install numpy opencv-python get-mnist
+
+### **Execution**
+
+1. **Handwritten Digit Classification**:
+```bash
+python mnist_scratch.py
+
+2. **Real-Time Age & Gender Detection**:
+```bash
+python age_gender_detector.py

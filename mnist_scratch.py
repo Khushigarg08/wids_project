@@ -1,13 +1,14 @@
 import numpy as np
-from mnist import get_mnist  # Make sure to 'pip install get-mnist'
+from mnist import get_mnist 
 
 # 1. Load and Preprocess Data
 x_train, y_train, x_test, y_test = get_mnist('MNIST')
-x_train = x_train.T / 255.0  # Normalize to [0, 1]
+x_train = x_train.T / 255.0  # Normalize pixel values
 y_train = y_train.flatten()
 
 # 2. Parameters Initialization
 def init_params():
+    # Randomly initialize weights to break symmetry
     W1 = np.random.rand(10, 784) - 0.5
     b1 = np.random.rand(10, 1) - 0.5
     W2 = np.random.rand(10, 10) - 0.5
@@ -26,7 +27,14 @@ def forward_prop(W1, b1, W2, b2, X):
     A2 = softmax(Z2)
     return Z1, A1, Z2, A2
 
-# 5. Backpropagation
+# 5. Helper Functions for Accuracy 
+def get_predictions(A2):
+    return np.argmax(A2, 0)
+
+def get_accuracy(predictions, Y):
+    return np.sum(predictions == Y) / Y.size
+
+# 6. Backpropagation
 def one_hot(Y):
     one_hot_Y = np.zeros((Y.size, Y.max() + 1))
     one_hot_Y[np.arange(Y.size), Y] = 1
@@ -42,13 +50,26 @@ def backward_prop(Z1, A1, Z2, A2, W2, X, Y):
     db1 = 1 / m * np.sum(dZ1)
     return dW1, db1, dW2, db2
 
-# 6. Training Loop
+# 7. Training Loop with Accuracy Experiments
 def train(X, Y, alpha, iterations):
     W1, b1, W2, b2 = init_params()
     for i in range(iterations):
         Z1, A1, Z2, A2 = forward_prop(W1, b1, W2, b2, X)
         dW1, db1, dW2, db2 = backward_prop(Z1, A1, Z2, A2, W2, X, Y)
+        
+        # Gradient Descent Update
         W1 -= alpha * dW1; b1 -= alpha * db1
         W2 -= alpha * dW2; b2 -= alpha * db2
+        
+        # Print progress every 50 iterations for the report
+        if i % 50 == 0:
+            predictions = get_predictions(A2)
+            print(f"Iteration {i} Accuracy: {get_accuracy(predictions, Y):.4f}")
+            
+    # Save parameters for deployment 
     np.save('weights_W1.npy', W1); np.save('weights_b1.npy', b1)
-    print("Training Complete. Weights Saved.")
+    np.save('weights_W2.npy', W2); np.save('weights_b2.npy', b2)
+    print("Training Complete. Parameters Saved.")
+
+# Run the experiment
+train(x_train, y_train, 0.1, 500)
